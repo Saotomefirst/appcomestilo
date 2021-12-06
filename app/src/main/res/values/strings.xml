@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">App com Estilo</string>
     <string name="iv_foto_descricao">iv_foto_descricao</string>
+
+    <string name="menu_1">Menu 1</string>
+    <string name="menu_2">Menu 2</string>
 </resources>

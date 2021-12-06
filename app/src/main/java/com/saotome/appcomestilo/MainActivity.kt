@@ -2,6 +2,10 @@ package com.saotome.appcomestilo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -51,5 +55,30 @@ class MainActivity : AppCompatActivity() {
                 ),
             )
         )
+    }
+
+    // Método para colocar o menu na tela
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    private fun mostrarToast (mensagem: String) {
+        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.item_menu_1 -> {
+                mostrarToast ("Menu 1 Clicado")
+                return true
+            }
+            R.id.item_menu_2 -> {
+                mostrarToast ("Segundo Menu clicado")
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
