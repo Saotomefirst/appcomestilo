@@ -7,14 +7,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ContatoAdapter : RecyclerView.Adapter <ContatoAdapter.ContatoAdapterViewHolder> (){
+class ContatoAdapter (var listener: ClickItemContatoListener) : RecyclerView.Adapter <ContatoAdapter.ContatoAdapterViewHolder> (){
 
     private val lista: MutableList<Contato> = mutableListOf()
 
     //quem cria cada item visual da tela
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContatoAdapterViewHolder {
       val view = LayoutInflater.from(parent.context).inflate(R.layout.contato_item, parent, false)
-        return ContatoAdapterViewHolder(view)
+        return ContatoAdapterViewHolder(view, lista, listener)
     }
 
     // quem percorre a lista e preenche cada item na tela
@@ -34,18 +34,27 @@ class ContatoAdapter : RecyclerView.Adapter <ContatoAdapter.ContatoAdapterViewHo
     }
 
     // Classe que faz o gerenciamento individual dos itens
-    class ContatoAdapterViewHolder (itemView: View) : RecyclerView.ViewHolder (itemView) {
+    class ContatoAdapterViewHolder (itemView: View, var lista: List<Contato>, var listener: ClickItemContatoListener) : RecyclerView.ViewHolder (itemView) {
 
         // Aqui temos a declaração de cada elemento a ser montado dentro de um Card
         private val tvNome: TextView = itemView.findViewById(R.id.tv_nome)
         private val tvTelefone: TextView = itemView.findViewById(R.id.tv_telefone)
         private val ivFoto: ImageView = itemView.findViewById(R.id.iv_foto)
 
+        // Criando o Click do Listener
+        init {
+            itemView.setOnClickListener(){
+                listener.clickItemContato(lista[adapterPosition])
+            }
+        }
+
         fun bind (contato: Contato) {
             tvNome.text = contato.nome
             tvTelefone.text = contato.telefone
             //TODO("Atualizar a Fotografia")
         }
+
     }
+
 
 }

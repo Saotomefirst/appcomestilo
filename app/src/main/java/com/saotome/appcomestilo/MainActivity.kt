@@ -1,5 +1,6 @@
 package com.saotome.appcomestilo
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -13,14 +14,14 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ClickItemContatoListener {
 
     //Obtemos o componente RecyclerView do XML
     private val rvLista: RecyclerView by lazy {
         findViewById<RecyclerView>(R.id.rv_lista)
     }
 
-    private val adapter = ContatoAdapter()
+    private val adapter = ContatoAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,4 +100,12 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    override fun clickItemContato(contato: Contato) {
+        // Mínimo necessário para se iniciar a nova Activity
+        val intent = Intent(this, ContatoDetalhe::class.java)
+        startActivity(intent)
+    }
+
+
 }
