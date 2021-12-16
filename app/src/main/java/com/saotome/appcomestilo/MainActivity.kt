@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.saotome.appcomestilo.ContatoDetalhe.Companion.CONTATO_EXTRA
 
 class MainActivity : AppCompatActivity(), ClickItemContatoListener {
 
@@ -104,6 +105,7 @@ class MainActivity : AppCompatActivity(), ClickItemContatoListener {
     override fun clickItemContato(contato: Contato) {
         // Mínimo necessário para se iniciar a nova Activity
         val intent = Intent(this, ContatoDetalhe::class.java)
+        intent.putExtra(CONTATO_EXTRA, contato)
         startActivity(intent)
     }
 
