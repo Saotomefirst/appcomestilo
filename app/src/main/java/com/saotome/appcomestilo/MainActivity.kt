@@ -60,6 +60,10 @@ class MainActivity : AppCompatActivity(), ClickItemContatoListener {
             ),
         )
 
+        val contatoHelper = ContatoHelper(getInstanceSharedPreferences())
+        contatoHelper.setListaContatos(lista)
+
+        /*
         // Salvando no Shared Preferences
         getInstanceSharedPreferences().edit () {
             val json = Gson().toJson(lista)
@@ -73,6 +77,8 @@ class MainActivity : AppCompatActivity(), ClickItemContatoListener {
              */
             commit()
         }
+
+         */
     }
 
     private fun getInstanceSharedPreferences (): SharedPreferences {
@@ -102,12 +108,18 @@ class MainActivity : AppCompatActivity(), ClickItemContatoListener {
     }
 
     private fun getListaContatos () : List<Contato>{
+
+        val contatoHelper = ContatoHelper(getInstanceSharedPreferences())
+        return contatoHelper.getListaContatos()
+        /*
         // Nota: GetString exige 2 parametros, um com o nome da chave a ser procurada
         // e o outro um valor padrao caso a chave não seja localizada
         // Neste caso, se não acharmos nada, retornamos uma lista vazia
         val lista = getInstanceSharedPreferences().getString("contatos", "[]")
         val tipoConversor = object: TypeToken<List<Contato>>() {}.type
         return Gson().fromJson(lista, tipoConversor)
+
+         */
     }
 
     private fun updateList () {
