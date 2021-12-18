@@ -1,6 +1,9 @@
 package com.saotome.appcomestilo
 
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -10,9 +13,12 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.edit
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.saotome.appcomestilo.ContatoDetalhe.Companion.CONTATO_EXTRA
 
 class MainActivity : AppCompatActivity(), ClickItemContatoListener {
@@ -29,8 +35,48 @@ class MainActivity : AppCompatActivity(), ClickItemContatoListener {
         setContentView(R.layout.drawer_menu)
 
         inicializarDrawer()
+        fetchListaContatos()
         bindView()
-        updateList()
+
+    }
+
+    // Função que simula a chamada de uma API que carrega os dados de forma remota
+    private fun fetchListaContatos () {
+        val lista = arrayListOf<Contato>(
+            Contato(
+                nome = "Jorge Freitas",
+                telefone = "(21)987-654-321",
+                foto = "foto.png"
+            ),
+            Contato(
+                nome = "Thaís Gallo",
+                telefone = "(21)123-456-789",
+                foto = "foto2.png"
+            ),
+            Contato(
+                nome = "Marilena Lopes",
+                telefone = "(21)123-654-987",
+                foto = "foto3.png"
+            ),
+        )
+
+        // Salvando no Shared Preferences
+        getInstanceSharedPreferences().edit () {
+            val json = Gson().toJson(lista)
+            putString("contatos", json)
+
+            /*
+            apply X commit
+            Ambos confirmam a gravação dos dados no SharedPreferences
+            apply: abre uma thread separada
+            commit: bloqueia a thread atual
+             */
+            commit()
+        }
+    }
+
+    private fun getInstanceSharedPreferences (): SharedPreferences {
+        return getSharedPreferences("com.saotome.appcomestilo.PREFERENCIAS", MODE_PRIVATE)
     }
 
     //Inicialização manual do Drawer Layout
@@ -52,29 +98,22 @@ class MainActivity : AppCompatActivity(), ClickItemContatoListener {
 
         // Definimos o layout manager
         rvLista.layoutManager = LinearLayoutManager(this)
+        updateList()
+    }
+
+    private fun getListaContatos () : List<Contato>{
+        // Nota: GetString exige 2 parametros, um com o nome da chave a ser procurada
+        // e o outro um valor padrao caso a chave não seja localizada
+        // Neste caso, se não acharmos nada, retornamos uma lista vazia
+        val lista = getInstanceSharedPreferences().getString("contatos", "[]")
+        val tipoConversor = object: TypeToken<List<Contato>>() {}.type
+        return Gson().fromJson(lista, tipoConversor)
     }
 
     private fun updateList () {
         // Criamos uma lista mock apenas para vermos dados na tela
-        adapter.updateList(
-            arrayListOf<Contato>(
-                Contato(
-                    nome = "Jorge Freitas",
-                    telefone = "(21)987-654-321",
-                    foto = "foto.png"
-                ),
-                Contato(
-                    nome = "Thaís Gallo",
-                    telefone = "(21)123-456-789",
-                    foto = "foto2.png"
-                ),
-                Contato(
-                    nome = "Marilena Lopes",
-                    telefone = "(21)123-654-987",
-                    foto = "foto3.png"
-                ),
-            )
-        )
+        val lista = getListaContatos()
+        adapter.updateList(lista)
     }
 
     // Método para colocar o menu na tela
